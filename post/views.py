@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+from django.http import HttpResponseRedirect
 
 from .models import Post
 from .forms import PostForm
@@ -27,7 +28,10 @@ def post_new(request):
             post.author = request.user
             print(request.user)
             post.save()
-            reverse('post:post_detail_view', args=[post.slug])
+            print(post.slug)
+            return HttpResponseRedirect(
+                reverse('post:post_detail_view', args=[post.slug])
+            )
     else:
         form = PostForm()
     return render(request, 'post/new_post.html', {'form': form})

@@ -1,5 +1,12 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.db.models import signals
+from django.core.mail import send_mail
+from django.urls import reverse
+
+from .tasks import send_verification_email
 
 
 class UserAccountManager(BaseUserManager):
@@ -38,6 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField('full name', blank=True, null=True, max_length=400)
     is_staff = models.BooleanField('staff status', default=False)
     is_active = models.BooleanField('active', default=True)
+    is_verified = models.BooleanField('verified', default=False)
+    verification_uuid = models.UUIDField('Unique Verification UUID', default=uuid.uuid4)
 
     def get_short_name(self):
         return self.email
@@ -47,3 +56,27 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __unicode__(self):
         return self.email
+
+
+# def user_post_save(sender, instance, signal, *args, **kwargs):
+#     if not instance.is_verified:
+#         send_mail(
+#             'Verify account at News Site',
+#             'Follow this link to verify your account: '
+#             'http://localhost:8000%s' % reverse('verify', kwargs={'uuid': str(instance.verification_uuid)}),
+#             'from@quickpublisher.dev',
+#             [instance.email],
+#             fail_silently=False,
+#         )
+
+
+def user_post_save(sender, instance, signal, *args, **kwargs):
+    if not instance.is_verified:
+        # Send verification email
+        send_verification_email.delay(instance.pk)
+
+
+signals.post_save.connect(user_post_save, sender=User)
+
+
+# signals.post_save.connect(user_post_save, sender=User)

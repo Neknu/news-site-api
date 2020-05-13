@@ -107,6 +107,21 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'main.User'
 
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sandboxca631c2e15394c58a4126dd0ef27b4db.mailgun.org'
+EMAIL_HOST_PASSWORD = '0792841ed4393c6019615c6c0007b719-3e51f8d2-2ab63c04'
+EMAIL_PORT = 587
+
+
+# REDIS related settings
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
