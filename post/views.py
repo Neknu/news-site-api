@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.utils import timezone
+from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 
@@ -25,9 +25,9 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
+            print(request.user)
             post.save()
-            return redirect('post_detail_view', pk=post.pk)
+            reverse('post:post_detail_view', args=[post.slug])
     else:
         form = PostForm()
     return render(request, 'post/new_post.html', {'form': form})

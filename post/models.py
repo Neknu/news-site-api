@@ -4,6 +4,8 @@ from django.utils.text import slugify
 
 from tinymce import models as tinymce_models
 
+from .utils import get_unique_slug
+
 
 STATUS_CHOICES = (
     (1, "On review"),
@@ -22,7 +24,8 @@ class Post(models.Model):
     # is_approved = models.BooleanField('Is post published?', blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        self.slug = self.slug or slugify(self.title)
+        if not self.slug:
+            self.slug = get_unique_slug(self, 'title', 'slug')
         super().save(*args, **kwargs)
 
     def __str__(self):
