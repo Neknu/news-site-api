@@ -64,8 +64,11 @@ def user_post_save(sender, instance, signal, created, *args, **kwargs):
         # mailgun is working strange and block my account, but before that I have tested all and it was working
         pass
 
-    if created:
-        instance.groups.add(Group.objects.get(name='user'))
+    try:
+        if created:
+            instance.groups.add(Group.objects.get(name='user'))
+    except:
+        print('Group User does not exist!')
 
 
 signals.post_save.connect(user_post_save, sender=User)
