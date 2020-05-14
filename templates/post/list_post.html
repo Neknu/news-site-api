@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<ul>
   {% for the_post in object_list %}
-    <li>
-      <a href="{% url 'post:post_detail_view' the_post.slug %}">{{ the_post.title }}</a>
-    </li>
+  <div class="card bg-light text-dark mb-1">
+      <div class="card-header"><a href="{% url 'post:post_detail_view' the_post.slug %}">{{ the_post.title }}</a></div>
+      <div class="card-body">{{ the_post.content|safe|slice:":255" }}</div>
+  </div>
   {% endfor %}
-</ul>
 {% endblock %}

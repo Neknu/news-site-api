@@ -1,10 +1,8 @@
 import uuid
 
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group
 from django.db.models import signals
-from django.core.mail import send_mail
-from django.urls import reverse
 
 from .tasks import send_verification_email
 
@@ -47,6 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField('active', default=True)
     is_verified = models.BooleanField('verified', default=False)
     verification_uuid = models.UUIDField('Unique Verification UUID', default=uuid.uuid4)
+    birthday = models.DateField('birthday', blank=True, null=True)
 
     def get_short_name(self):
         return self.email
@@ -70,13 +69,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 #         )
 
 
-def user_post_save(sender, instance, signal, *args, **kwargs):
+def user_post_save(sender, instance, signal, created, *args, **kwargs):
     if not instance.is_verified:
         # Send verification email
-        send_verification_email.delay(instance.pk)
+        # send_verification_email.delay(instance.pk)
+        # mailgun is working strange and block my account, but before that I have tested all and it was working
+        pass
+
+    if created:
+        instance.groups.add(Group.objects.get(name='user'))
 
 
 signals.post_save.connect(user_post_save, sender=User)
-
-
-# signals.post_save.connect(user_post_save, sender=User)

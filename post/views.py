@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Post
 from .forms import PostForm
@@ -20,6 +21,7 @@ class PostDetailView(DetailView):
     slug_field = 'slug'
 
 
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -37,5 +39,5 @@ def post_new(request):
     return render(request, 'post/new_post.html', {'form': form})
 
 
-post_list_view = PostListView.as_view()
-post_detail_view = PostDetailView.as_view()
+post_list_view = login_required(PostListView.as_view())
+post_detail_view = login_required(PostDetailView.as_view())

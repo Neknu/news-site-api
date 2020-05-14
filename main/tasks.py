@@ -14,7 +14,7 @@ def send_verification_email(user_id):
         send_mail(
             'Verify your QuickPublisher account',
             'Follow this link to verify your account: '
-            'http://localhost:8000%s' % reverse('verify', kwargs={'uuid': str(user.verification_uuid)}),
+            'http://localhost:8000%s' % reverse('main:verify', kwargs={'uuid': str(user.verification_uuid)}),
             'from@quickpublisher.dev',
             [user.email],
             fail_silently=False,
