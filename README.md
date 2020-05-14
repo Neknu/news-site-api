@@ -18,3 +18,7 @@ repo for test python task
 - every user post needs to be accepted by the admin or moderator
 - there are 3 groups in admin page: `user, moderator, admin`
 - you need to verify your account with email
+
+# Super user for test:
+- email: `admin@admin.com`
+- password: `admin`
