@@ -19,7 +19,7 @@ class Post(models.Model):
     content = tinymce_models.HTMLField('Content')
     slug = models.SlugField('Slug')
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    models.DateTimeField('Created day', auto_now_add=True, blank=True)
+    created = models.DateTimeField('Created day', auto_now_add=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
     # is_approved = models.BooleanField('Is post published?', blank=True, null=True)
 

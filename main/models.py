@@ -57,18 +57,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-# def user_post_save(sender, instance, signal, *args, **kwargs):
-#     if not instance.is_verified:
-#         send_mail(
-#             'Verify account at News Site',
-#             'Follow this link to verify your account: '
-#             'http://localhost:8000%s' % reverse('verify', kwargs={'uuid': str(instance.verification_uuid)}),
-#             'from@quickpublisher.dev',
-#             [instance.email],
-#             fail_silently=False,
-#         )
-
-
 def user_post_save(sender, instance, signal, created, *args, **kwargs):
     if not instance.is_verified:
         # Send verification email
